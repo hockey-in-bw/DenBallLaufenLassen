@@ -38,6 +38,17 @@ class Voyage:
     def __str__(self):
         return f"{self.start_city}, {self.destination_city}, {self.distance}, {self.duration}"
 
+def read_city_list():
+    #return ["Aalen", "Bietigheim", "Bruchsal", "Karlsruhe", "Lahr"]
+    result = []
+    with open("hbw_cities.txt") as cities_file:
+        lines = cities_file.readlines()
+    for line in lines:
+        result.append(line.strip())
+
+    result.sort()    
+    return result
+
 def write_entries_to_file_cache(new_file_entries_to_write):
 
     now = f", {datetime.datetime.utcnow()}"
@@ -117,7 +128,8 @@ def generate_html_table(city_list, cache_entries, field_selector = "distance"):
     return table
 
 # Example usage
-city_list = ["Aalen", "Bietigheim", "Bruchsal", "Karlsruhe", "Lahr"]
+city_list = read_city_list()
+print(f"Checking the distances for the cities: {city_list}")
 cache_file_name = "distances.csv"
 cache_entries={}
 with open (cache_file_name, "r") as cache_file:
