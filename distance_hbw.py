@@ -33,7 +33,7 @@ class Voyage:
         return Voyage(entries[0], entries[1], entries[2], entries[3])
 
     def get_csv_entry(self):
-        return f"{self.start_city}, {self.destination_city}, {self.distance}, {self.duration}"
+        return f"{self.start_city}; {self.destination_city}; {self.distance}; {self.duration}"
 
     def __str__(self):
         return f"{self.start_city}, {self.destination_city}, {self.distance}, {self.duration}"
@@ -51,7 +51,7 @@ def read_city_list():
 
 def write_entries_to_file_cache(new_file_entries_to_write):
 
-    now = f", {datetime.datetime.utcnow()}"
+    now = f"; {datetime.datetime.utcnow()}"
 
     lines_to_write = []
     for entry in new_file_entries_to_write:
@@ -118,7 +118,8 @@ def generate_html_table(city_list, cache_entries, field_selector = "distance"):
             if field_selector == "distance":
                 value = f"{int(float(cache_entry.distance) / 1000)} km"
             else:
-                value = datetime.timedelta(seconds=int(cache_entry.duration))
+                value = str(datetime.timedelta(seconds=int(cache_entry.duration)))
+                value = value[:-3]
 
             table += "<td>{}</td>".format(value)
         table += "</tr>"
@@ -135,7 +136,7 @@ cache_entries={}
 with open (cache_file_name, "r") as cache_file:
     lines = cache_file.readlines()
     for line in lines:
-        entries=line.split(",")
+        entries=line.split(";")
         start_and_destination = StartAndDestination(entries[0].strip(), entries[1].strip())
         cache_entry = cache_entries.get(start_and_destination, None)
         if not cache_entry:
